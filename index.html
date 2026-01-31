@@ -1,96 +1,304 @@
 <!DOCTYPE html>
-<html lang="uk">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Color Clicker</title>
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #0f172a;
-            font-family: Arial, sans-serif;
-            color: #fff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irish Neon Slot</title>
 
-        .game {
-            display: flex;
-            gap: 20px;
-        }
+<style>
+:root{
+  --bg:#020503;
+  --panel:#08110c;
+  --green:#19ff1a;
+  --gold:#ffd873;
+  --glass:rgba(255,255,255,.06);
+  --text:#ffffff;
+}
 
-        .card {
-            background: #020617;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            width: 140px;
-        }
+*{box-sizing:border-box;font-family:Montserrat,system-ui}
 
-        .btn {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top,#0f2516,#020503 70%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text);
+}
 
-        .red {
-            background: #ef4444;
-        }
+/* ===== SLOT FRAME ===== */
+.slot{
+  width:420px;
+  padding:26px;
+  border-radius:32px;
+  background:
+    linear-gradient(180deg,#0e1e15,#050907);
+  box-shadow:
+    0 0 80px rgba(25,255,26,.25),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+  position:relative;
+}
 
-        .green {
-            background: #22c55e;
-        }
+.slot::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:34px;
+  background:linear-gradient(135deg,
+    transparent 35%,
+    rgba(25,255,26,.45),
+    transparent 70%);
+  opacity:.3;
+  pointer-events:none;
+}
 
-        .blue {
-            background: #3b82f6;
-        }
+/* ===== HEADER ===== */
+.header{
+  text-align:center;
+  margin-bottom:16px;
+}
 
-        .count {
-            font-size: 24px;
-            font-weight: bold;
-        }
-    </style>
+.title{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:var(--green);
+  text-shadow:0 0 20px rgba(25,255,26,.8);
+}
+
+.subtitle{
+  font-size:13px;
+  opacity:.65;
+}
+
+/* ===== REELS ===== */
+.reels-wrap{
+  position:relative;
+  padding:14px;
+  border-radius:22px;
+  background:rgba(0,0,0,.55);
+  box-shadow:
+    inset 0 0 25px rgba(0,0,0,.9),
+    0 0 30px rgba(25,255,26,.25);
+}
+
+.reels{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.reel{
+  width:64px;
+  height:96px;
+  border-radius:14px;
+  background:#000;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    inset 0 0 14px rgba(0,0,0,.9),
+    0 0 12px rgba(25,255,26,.25);
+}
+
+.reel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
+  pointer-events:none;
+}
+
+.strip{
+  position:absolute;
+  width:100%;
+  top:0;
+  transition:transform 2s cubic-bezier(.08,.88,.18,1);
+}
+
+.symbol{
+  height:96px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
+}
+
+/* PAYLINE */
+.payline{
+  position:absolute;
+  left:20px;
+  right:20px;
+  top:50%;
+  height:2px;
+  background:linear-gradient(90deg,
+    transparent,
+    var(--gold),
+    transparent);
+  box-shadow:0 0 12px rgba(255,216,115,.9);
+  opacity:0;
+  transition:.4s;
+}
+
+.payline.active{opacity:1}
+
+/* ===== HUD ===== */
+.hud{
+  display:flex;
+  justify-content:space-between;
+  margin:18px 6px 12px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.hud span{
+  color:var(--gold);
+}
+
+/* ===== CONTROLS ===== */
+.controls{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+}
+
+button{
+  background:linear-gradient(180deg,#2cff3f,#0fb81b);
+  border:none;
+  border-radius:999px;
+  padding:14px 54px;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  color:#001a05;
+  box-shadow:
+    0 8px 0 #0a7a10,
+    0 0 30px rgba(25,255,26,.6);
+  transition:.15s;
+}
+
+button:active{
+  transform:translateY(5px);
+  box-shadow:
+    0 3px 0 #0a7a10,
+    0 0 20px rgba(25,255,26,.4);
+}
+
+.result{
+  margin-top:14px;
+  min-height:24px;
+  text-align:center;
+  font-weight:900;
+}
+
+.win{
+  color:var(--gold);
+  text-shadow:
+    0 0 12px rgba(255,216,115,1),
+    0 0 32px rgba(255,216,115,.6);
+  animation:pulse .8s infinite alternate;
+}
+
+@keyframes pulse{
+  from{opacity:.7}
+  to{opacity:1}
+}
+
+.lose{opacity:.6}
+</style>
 </head>
 
 <body>
 
-    <div class="game">
-        <div class="card">
-            <div class="btn red" data-color="red"></div>
-            <div>Red: <span id="redCount" class="count">0</span></div>
-        </div>
+<div class="slot">
+  <div class="header">
+    <div class="title">IRISH NEON SLOT</div>
+    <div class="subtitle">Premium Casino Visual</div>
+  </div>
 
-        <div class="card">
-            <div class="btn green" data-color="green"></div>
-            <div>Green: <span id="greenCount" class="count">0</span></div>
-        </div>
-
-        <div class="card">
-            <div class="btn blue" data-color="blue"></div>
-            <div>Blue: <span id="blueCount" class="count">0</span></div>
-        </div>
+  <div class="reels-wrap">
+    <div class="payline" id="payline"></div>
+    <div class="reels">
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
     </div>
+  </div>
 
-    <script>
-        const counts = {
-            red: 0,
-            green: 0,
-            blue: 0
-        };
+  <div class="hud">
+    <div>BALANCE: <span id="balance">1000</span></div>
+    <div>BET: <span>10</span></div>
+  </div>
 
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const color = btn.dataset.color;
-                counts[color]++;
-                document.getElementById(color + 'Count').textContent = counts[color];
-            });
-        });
-    </script>
+  <div class="controls">
+    <button id="spin">SPIN</button>
+  </div>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const symbols = ['🍀','💰','⭐','🔔','🍺','7️⃣'];
+const reels = document.querySelectorAll('.strip');
+const result = document.getElementById('result');
+const spinBtn = document.getElementById('spin');
+const payline = document.getElementById('payline');
+const balanceEl = document.getElementById('balance');
+
+let balance = 1000;
+const bet = 10;
+
+function init(reel){
+  reel.innerHTML='';
+  const stack=[...symbols,...symbols,...symbols];
+  stack.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='symbol';
+    d.textContent=s;
+    reel.appendChild(d);
+  });
+}
+
+reels.forEach(init);
+
+spinBtn.onclick=()=>{
+  if(balance<bet) return;
+  balance-=bet;
+  balanceEl.textContent=balance;
+
+  result.textContent='';
+  result.className='result';
+  payline.classList.remove('active');
+
+  const res=[];
+
+  reels.forEach((reel,i)=>{
+    const idx=Math.floor(Math.random()*symbols.length);
+    res.push(symbols[idx]);
+    reel.style.transitionDuration=(1.8+i*.25)+'s';
+    reel.style.transform=`translateY(-${(idx+symbols.length)*96}px)`;
+  });
+
+  setTimeout(()=>{
+    if(res.every(v=>v===res[0])){
+      const win=bet*10;
+      balance+=win;
+      balanceEl.textContent=balance;
+      payline.classList.add('active');
+      result.textContent=`🍀 WIN ${win}`;
+      result.classList.add('win');
+    }else{
+      result.textContent='Try again';
+      result.classList.add('lose');
+    }
+  },2600);
+};
+</script>
 
 </body>
-
 </html>
