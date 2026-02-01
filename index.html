@@ -209,6 +209,7 @@ button:active{
 
 .lose{opacity:.6}
 </style>
+   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
@@ -299,6 +300,27 @@ spinBtn.onclick=()=>{
   },2600);
 };
 </script>
+  <script>
+    // Telegram init
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
 
+    // Game logic
+    const counts = {
+        red: 0,
+        green: 0,
+        blue: 0
+    };
+
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const color = btn.dataset.color;
+            counts[color]++;
+            document.getElementById(color + 'Count').textContent = counts[color];
+        });
+    });
+</script>
 </body>
 </html>
+
