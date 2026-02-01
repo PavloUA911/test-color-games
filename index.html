@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Irish Neon Slot</title>
 
-<!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
@@ -15,15 +14,14 @@
   --green:#19ff1a;
   --green-soft:#0fb81b;
   --gold:#ffd873;
+  --text:#ffffff;
 }
 
-/* RESET */
 *{
   box-sizing:border-box;
   font-family:Arial,system-ui,sans-serif;
 }
 
-/* ===== TELEGRAM SAFE FULL HEIGHT ===== */
 html,body{
   margin:0;
   padding:0;
@@ -31,22 +29,17 @@ html,body{
   height:100%;
   background:
     radial-gradient(circle at top,#0f2b1a,#020503 70%);
-  color:#fff;
+  color:var(--text);
 }
 
-/* Telegram root */
-.tg-app{
+/* ===== TELEGRAM FULL APP ===== */
+.app{
   min-height:100%;
   display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:
-    env(safe-area-inset-top)
-    16px
-    env(safe-area-inset-bottom);
+  flex-direction:column;
 }
 
-/* ===== BACKGROUND SVG FLOATING ===== */
+/* ===== BACKGROUND ANIMATION ===== */
 .bg{
   position:fixed;
   inset:0;
@@ -57,25 +50,34 @@ html,body{
 
 .clover{
   position:absolute;
-  width:48px;
+  width:40px;
   opacity:.08;
-  animation:float 18s linear infinite;
+  animation:float 22s linear infinite;
 }
 
-.clover.small{width:32px;opacity:.06}
-.clover.big{width:64px;opacity:.1}
+.clover.small{width:26px;opacity:.05}
+.clover.big{width:60px;opacity:.1}
 
 @keyframes float{
-  from{transform:translateY(110vh) rotate(0deg)}
+  from{transform:translateY(120vh) rotate(0deg)}
   to{transform:translateY(-120px) rotate(360deg)}
 }
 
-/* ===== SLOT ===== */
-.slot{
+/* ===== MAIN CONTENT ===== */
+.content{
   position:relative;
   z-index:2;
-  width:100%;
-  max-width:390px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:
+    env(safe-area-inset-top)
+    16px
+    env(safe-area-inset-bottom);
+}
+
+/* ===== SLOT CARD ===== */
+.slot{
   background:
     linear-gradient(180deg,#0b1f14,#050907);
   border-radius:22px;
@@ -85,10 +87,8 @@ html,body{
     inset 0 0 0 1px rgba(255,255,255,.08);
 }
 
-/* HEADER */
 .header{
   text-align:center;
-  margin-bottom:6px;
 }
 
 .title{
@@ -102,10 +102,9 @@ html,body{
   font-size:12px;
   opacity:.75;
   margin-top:4px;
-  line-height:1.4;
 }
 
-/* REELS */
+/* ===== REELS ===== */
 .reels{
   display:flex;
   justify-content:center;
@@ -114,72 +113,109 @@ html,body{
   padding:10px;
   background:#000;
   border-radius:16px;
-  box-shadow:
-    inset 0 0 20px rgba(0,0,0,.9),
-    0 0 20px rgba(25,255,26,.2);
 }
 
 .reel{
-  width:56px;
-  height:84px;
+  width:52px;
+  height:82px;
   background:#000;
   border-radius:10px;
   overflow:hidden;
 }
 
 .strip{
-  transition:transform 1.7s cubic-bezier(.15,.85,.25,1);
+  transition:transform 1.6s cubic-bezier(.15,.85,.25,1);
 }
 
 .symbol{
-  height:84px;
+  height:82px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:32px;
+  font-size:30px;
 }
 
-/* HUD */
+/* ===== HUD ===== */
 .hud{
   display:flex;
   justify-content:space-between;
   font-weight:700;
   font-size:14px;
-  margin:6px 4px 10px;
 }
 
 .hud span{color:var(--gold)}
 
-/* BUTTON */
 button{
+  margin-top:10px;
   width:100%;
   padding:12px;
   border-radius:999px;
   border:none;
-  background:
-    linear-gradient(180deg,var(--green),var(--green-soft));
+  background:linear-gradient(180deg,var(--green),var(--green-soft));
   font-size:16px;
   font-weight:900;
   cursor:pointer;
   color:#001a05;
-  box-shadow:
-    0 6px 0 #0a7a10,
-    0 0 20px rgba(25,255,26,.5);
 }
 
-button:active{
-  transform:translateY(4px);
-}
-
-/* RESULT */
-.result{
+/* ===== FILLER SECTION ===== */
+.filler{
+  margin:20px 0 10px;
   text-align:center;
-  margin-top:8px;
-  min-height:22px;
-  font-weight:800;
+  font-size:13px;
+  opacity:.8;
 }
 
-/* WIN OVERLAY */
+/* ===== INFO GRID ===== */
+.info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:12px 0;
+}
+
+.info div{
+  background:rgba(0,0,0,.35);
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  font-size:12px;
+}
+
+.info strong{
+  display:block;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+
+/* ===== RATING ===== */
+.rating{
+  text-align:center;
+  margin:12px 0;
+  font-size:18px;
+  color:var(--gold);
+}
+
+/* ===== GALLERY ===== */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+  margin-top:auto;
+  padding-top:12px;
+}
+
+.gallery div{
+  background:rgba(0,0,0,.4);
+  border-radius:12px;
+  height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+
+/* ===== WIN OVERLAY ===== */
 .win-overlay{
   position:absolute;
   inset:0;
@@ -191,52 +227,27 @@ button:active{
   pointer-events:none;
   transition:.3s;
 }
-.win-overlay.show{opacity:1}
 
+.win-overlay.show{opacity:1}
 .win-text{
   font-size:32px;
   font-weight:900;
   color:var(--gold);
-  text-shadow:
-    0 0 14px rgba(255,216,115,1),
-    0 0 30px rgba(255,216,115,.6);
-  animation:pulse .8s infinite alternate;
-}
-
-@keyframes pulse{
-  from{transform:scale(1)}
-  to{transform:scale(1.1)}
-}
-
-/* COINS */
-.coin{
-  position:absolute;
-  bottom:20px;
-  font-size:20px;
-  animation:coinFly 1.3s ease-out forwards;
-  pointer-events:none;
-}
-
-@keyframes coinFly{
-  from{transform:translateY(0) scale(1);opacity:1}
-  to{transform:translateY(-160px) scale(1.4);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SVG BACKGROUND -->
+<!-- BACKGROUND -->
 <div class="bg">
-  <!-- multiple clovers -->
   <svg class="clover big" style="left:10%" viewBox="0 0 100 100">
     <circle cx="30" cy="30" r="20" fill="#19ff1a"/>
     <circle cx="70" cy="30" r="20" fill="#19ff1a"/>
     <circle cx="30" cy="70" r="20" fill="#19ff1a"/>
     <circle cx="70" cy="70" r="20" fill="#19ff1a"/>
   </svg>
-
-  <svg class="clover small" style="left:60%;animation-delay:6s" viewBox="0 0 100 100">
+  <svg class="clover small" style="left:70%;animation-delay:6s" viewBox="0 0 100 100">
     <circle cx="30" cy="30" r="20" fill="#19ff1a"/>
     <circle cx="70" cy="30" r="20" fill="#19ff1a"/>
     <circle cx="30" cy="70" r="20" fill="#19ff1a"/>
@@ -244,106 +255,62 @@ button:active{
   </svg>
 </div>
 
-<div class="tg-app">
-  <div class="slot" id="slot">
-    <div class="header">
-      <div class="title">🍀 IRISH NEON SLOT</div>
-      <div class="desc">
-        A vibrant 5-reel slot inspired by Irish luck, glowing clovers
-        and golden wins. Spin and feel the charm of Emerald Isle.
+<div class="app">
+  <div class="content">
+
+    <div class="slot">
+      <div class="header">
+        <div class="title">🍀 IRISH NEON SLOT</div>
+        <div class="desc">
+          A premium 5-reel slot inspired by Irish luck, glowing clovers
+          and golden treasures of the Emerald Isle.
+        </div>
       </div>
+
+      <div class="reels">
+        <div class="reel"><div class="strip"></div></div>
+        <div class="reel"><div class="strip"></div></div>
+        <div class="reel"><div class="strip"></div></div>
+        <div class="reel"><div class="strip"></div></div>
+        <div class="reel"><div class="strip"></div></div>
+      </div>
+
+      <div class="hud">
+        <div>BAL: <span id="balance">100</span></div>
+        <div>BET: <span>5</span></div>
+      </div>
+
+      <button id="spin">SPIN</button>
     </div>
 
-    <div class="reels">
-      <div class="reel"><div class="strip"></div></div>
-      <div class="reel"><div class="strip"></div></div>
-      <div class="reel"><div class="strip"></div></div>
-      <div class="reel"><div class="strip"></div></div>
-      <div class="reel"><div class="strip"></div></div>
+    <div class="filler">
+      Feel the magic of Ireland with every spin 🍀
     </div>
 
-    <div class="hud">
-      <div>BAL: <span id="balance">100</span></div>
-      <div>BET: <span>5</span></div>
+    <div class="info">
+      <div><strong>RTP</strong>96.2%</div>
+      <div><strong>Volatility</strong>Medium</div>
+      <div><strong>Max Win</strong>x1000</div>
     </div>
 
-    <button id="spin">SPIN</button>
-    <div class="result" id="result"></div>
-
-    <div class="win-overlay" id="winOverlay">
-      <div class="win-text">🍀 WIN!</div>
+    <div class="rating">
+      ★ ★ ★ ★ ☆
     </div>
+
+    <div class="gallery">
+      <div>🍀</div>
+      <div>💰</div>
+      <div>⭐</div>
+      <div>🔔</div>
+      <div>🍺</div>
+    </div>
+
   </div>
 </div>
 
 <script>
 if(window.Telegram && Telegram.WebApp){
   Telegram.WebApp.ready();
-}
-
-/* GAME */
-const symbols=['🍀','💰','⭐','🔔','🍺','7️⃣'];
-const reels=document.querySelectorAll('.strip');
-const spinBtn=document.getElementById('spin');
-const result=document.getElementById('result');
-const balanceEl=document.getElementById('balance');
-const overlay=document.getElementById('winOverlay');
-const slot=document.getElementById('slot');
-
-let balance=100;
-const bet=5;
-let loseStreak=0;
-
-reels.forEach(reel=>{
-  reel.innerHTML='';
-  [...symbols,...symbols].forEach(s=>{
-    const d=document.createElement('div');
-    d.className='symbol';
-    d.textContent=s;
-    reel.appendChild(d);
-  });
-});
-
-spinBtn.onclick=()=>{
-  if(balance<bet) return;
-  balance-=bet;
-  balanceEl.textContent=balance;
-  result.textContent='';
-
-  const isWin=Math.random()<0.35||loseStreak>=4;
-  let final=[];
-
-  if(isWin){
-    loseStreak=0;
-    const sym=symbols[Math.floor(Math.random()*symbols.length)];
-    final=Array(5).fill(sym);
-    balance+=bet*4;
-    balanceEl.textContent=balance;
-    showWin();
-    result.textContent='WIN!';
-  }else{
-    loseStreak++;
-    final=Array.from({length:5},()=>symbols[Math.floor(Math.random()*symbols.length)]);
-    result.textContent='Try again';
-  }
-
-  reels.forEach((reel,i)=>{
-    const idx=symbols.indexOf(final[i]);
-    reel.style.transform=`translateY(-${idx*84}px)`;
-  });
-};
-
-function showWin(){
-  overlay.classList.add('show');
-  for(let i=0;i<12;i++){
-    const c=document.createElement('div');
-    c.className='coin';
-    c.textContent='💰';
-    c.style.left=Math.random()*80+10+'%';
-    slot.appendChild(c);
-    setTimeout(()=>c.remove(),1300);
-  }
-  setTimeout(()=>overlay.classList.remove('show'),1300);
 }
 </script>
 
