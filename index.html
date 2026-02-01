@@ -5,14 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Irish Slot Telegram</title>
 
-<!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:Arial,system-ui,sans-serif;
-}
+*{box-sizing:border-box;font-family:Arial,system-ui,sans-serif}
 
 body{
   margin:0;
@@ -113,7 +109,6 @@ button{
   pointer-events:none;
   transition:.3s;
 }
-
 .win-overlay.show{opacity:1}
 
 .win-text{
@@ -123,7 +118,6 @@ button{
   text-shadow:0 0 18px rgba(25,255,26,.9);
   animation:pulse .7s infinite alternate;
 }
-
 @keyframes pulse{
   from{transform:scale(1)}
   to{transform:scale(1.1)}
@@ -137,16 +131,9 @@ button{
   animation:coinFly 1.2s ease-out forwards;
   pointer-events:none;
 }
-
 @keyframes coinFly{
-  from{
-    transform:translateY(0) scale(1);
-    opacity:1;
-  }
-  to{
-    transform:translateY(-140px) scale(1.4);
-    opacity:0;
-  }
+  from{transform:translateY(0) scale(1);opacity:1}
+  to{transform:translateY(-140px) scale(1.4);opacity:0}
 }
 </style>
 </head>
@@ -170,34 +157,36 @@ button{
   <button id="spin">SPIN</button>
   <div class="result" id="result"></div>
 
-  <!-- WIN EFFECT -->
   <div class="win-overlay" id="winOverlay">
-    <div class="win-text">🍀 WIN!</div>
+    <div class="win-text" id="winText">🍀 WIN!</div>
   </div>
 </div>
 
 <script>
-/* TELEGRAM INIT */
 if(window.Telegram && Telegram.WebApp){
   Telegram.WebApp.ready();
 }
 
-/* GAME LOGIC */
-const symbols=['🍀','💰','⭐','🔔','7️⃣'];
-const reels=document.querySelectorAll('.strip');
-const spinBtn=document.getElementById('spin');
-const result=document.getElementById('result');
-const balanceEl=document.getElementById('balance');
-const overlay=document.getElementById('winOverlay');
-const slot=document.getElementById('slot');
+/* ===== GAME CONFIG ===== */
+const symbols = ['🍀','💰','⭐','🔔','7️⃣'];
+const WIN_CHANCE = 0.3; // 30% виграшних спінів
 
-let balance=100;
-const bet=5;
+const reels = document.querySelectorAll('.strip');
+const spinBtn = document.getElementById('spin');
+const result = document.getElementById('result');
+const balanceEl = document.getElementById('balance');
+const overlay = document.getElementById('winOverlay');
+const winText = document.getElementById('winText');
+const slot = document.getElementById('slot');
 
-/* INIT REELS */
+let balance = 100;
+const bet = 5;
+let loseStreak = 0;
+
+/* INIT */
 reels.forEach(reel=>{
   reel.innerHTML='';
-  [...symbols,...symbols].forEach(s=>{
+  [...symbols, ...symbols].forEach(s=>{
     const d=document.createElement('div');
     d.className='symbol';
     d.textContent=s;
@@ -205,37 +194,57 @@ reels.forEach(reel=>{
   });
 });
 
-spinBtn.onclick=()=>{
-  if(balance<bet) return;
-  balance-=bet;
-  balanceEl.textContent=balance;
-  result.textContent='';
+/* SPIN */
+spinBtn.onclick = () => {
+  if(balance < bet) return;
 
-  const res=[];
+  balance -= bet;
+  balanceEl.textContent = balance;
+  result.textContent = '';
+
+  const isWin =
+    Math.random() < WIN_CHANCE ||
+    loseStreak >= 5; // гарантія виграшу після серії програшів
+
+  let finalSymbols = [];
+
+  if(isWin){
+    loseStreak = 0;
+
+    const r = Math.random();
+    let multiplier = 2;
+
+    if(r > 0.95) multiplier = 10;
+    else if(r > 0.7) multiplier = 4;
+
+    const winSymbol = symbols[Math.floor(Math.random()*symbols.length)];
+    finalSymbols = [winSymbol, winSymbol, winSymbol];
+
+    const winAmount = bet * multiplier;
+    balance += winAmount;
+    balanceEl.textContent = balance;
+
+    result.textContent = `WIN x${multiplier}`;
+    winText.textContent = multiplier >= 10 ? '💥 BIG WIN!' : '🍀 WIN!';
+    showWin();
+
+  } else {
+    loseStreak++;
+    finalSymbols = Array.from({length:3},()=>symbols[Math.floor(Math.random()*symbols.length)]);
+    result.textContent = 'Try again';
+  }
 
   reels.forEach((reel,i)=>{
-    const idx=Math.floor(Math.random()*symbols.length);
-    res.push(symbols[idx]);
-    reel.style.transform=`translateY(-${idx*80}px)`;
+    const idx = symbols.indexOf(finalSymbols[i]);
+    reel.style.transform = `translateY(-${idx * 80}px)`;
   });
-
-  setTimeout(()=>{
-    if(res.every(v=>v===res[0])){
-      balance+=20;
-      balanceEl.textContent=balance;
-      result.textContent='WIN!';
-      showWin();
-    }else{
-      result.textContent='Try again';
-    }
-  },600);
 };
 
 /* WIN EFFECT */
 function showWin(){
   overlay.classList.add('show');
 
-  for(let i=0;i<10;i++){
+  for(let i=0;i<12;i++){
     const coin=document.createElement('div');
     coin.className='coin';
     coin.textContent='💰';
@@ -245,9 +254,7 @@ function showWin(){
     setTimeout(()=>coin.remove(),1200);
   }
 
-  setTimeout(()=>{
-    overlay.classList.remove('show');
-  },1200);
+  setTimeout(()=>overlay.classList.remove('show'),1200);
 }
 </script>
 
