@@ -2,9 +2,10 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Irish Neon Slot</title>
 
+<!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
@@ -14,30 +15,67 @@
   --green:#19ff1a;
   --green-soft:#0fb81b;
   --gold:#ffd873;
-  --dark:#000;
 }
 
+/* RESET */
 *{
   box-sizing:border-box;
   font-family:Arial,system-ui,sans-serif;
 }
 
-body{
+/* ===== TELEGRAM SAFE FULL HEIGHT ===== */
+html,body{
   margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
   background:
     radial-gradient(circle at top,#0f2b1a,#020503 70%);
   color:#fff;
+}
+
+/* Telegram root */
+.tg-app{
+  min-height:100%;
   display:flex;
   justify-content:center;
   align-items:flex-start;
-  padding:16px;
+  padding:
+    env(safe-area-inset-top)
+    16px
+    env(safe-area-inset-bottom);
 }
 
-/* SLOT CONTAINER */
+/* ===== BACKGROUND SVG FLOATING ===== */
+.bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+
+.clover{
+  position:absolute;
+  width:48px;
+  opacity:.08;
+  animation:float 18s linear infinite;
+}
+
+.clover.small{width:32px;opacity:.06}
+.clover.big{width:64px;opacity:.1}
+
+@keyframes float{
+  from{transform:translateY(110vh) rotate(0deg)}
+  to{transform:translateY(-120px) rotate(360deg)}
+}
+
+/* ===== SLOT ===== */
 .slot{
   position:relative;
+  z-index:2;
   width:100%;
-  max-width:380px;
+  max-width:390px;
   background:
     linear-gradient(180deg,#0b1f14,#050907);
   border-radius:22px;
@@ -45,13 +83,12 @@ body{
   box-shadow:
     0 0 40px rgba(25,255,26,.25),
     inset 0 0 0 1px rgba(255,255,255,.08);
-  overflow:hidden;
 }
 
 /* HEADER */
 .header{
   text-align:center;
-  margin-bottom:10px;
+  margin-bottom:6px;
 }
 
 .title{
@@ -61,9 +98,11 @@ body{
   text-shadow:0 0 14px rgba(25,255,26,.9);
 }
 
-.subtitle{
+.desc{
   font-size:12px;
-  opacity:.65;
+  opacity:.75;
+  margin-top:4px;
+  line-height:1.4;
 }
 
 /* REELS */
@@ -98,7 +137,6 @@ body{
   align-items:center;
   justify-content:center;
   font-size:32px;
-  filter:drop-shadow(0 0 6px rgba(255,255,255,.3));
 }
 
 /* HUD */
@@ -131,9 +169,6 @@ button{
 
 button:active{
   transform:translateY(4px);
-  box-shadow:
-    0 2px 0 #0a7a10,
-    0 0 14px rgba(25,255,26,.4);
 }
 
 /* RESULT */
@@ -159,7 +194,7 @@ button:active{
 .win-overlay.show{opacity:1}
 
 .win-text{
-  font-size:34px;
+  font-size:32px;
   font-weight:900;
   color:var(--gold);
   text-shadow:
@@ -191,30 +226,53 @@ button:active{
 
 <body>
 
-<div class="slot" id="slot">
-  <div class="header">
-    <div class="title">🍀 IRISH NEON SLOT</div>
-    <div class="subtitle">Clover Gold Edition</div>
-  </div>
+<!-- SVG BACKGROUND -->
+<div class="bg">
+  <!-- multiple clovers -->
+  <svg class="clover big" style="left:10%" viewBox="0 0 100 100">
+    <circle cx="30" cy="30" r="20" fill="#19ff1a"/>
+    <circle cx="70" cy="30" r="20" fill="#19ff1a"/>
+    <circle cx="30" cy="70" r="20" fill="#19ff1a"/>
+    <circle cx="70" cy="70" r="20" fill="#19ff1a"/>
+  </svg>
 
-  <div class="reels">
-    <div class="reel"><div class="strip"></div></div>
-    <div class="reel"><div class="strip"></div></div>
-    <div class="reel"><div class="strip"></div></div>
-    <div class="reel"><div class="strip"></div></div>
-    <div class="reel"><div class="strip"></div></div>
-  </div>
+  <svg class="clover small" style="left:60%;animation-delay:6s" viewBox="0 0 100 100">
+    <circle cx="30" cy="30" r="20" fill="#19ff1a"/>
+    <circle cx="70" cy="30" r="20" fill="#19ff1a"/>
+    <circle cx="30" cy="70" r="20" fill="#19ff1a"/>
+    <circle cx="70" cy="70" r="20" fill="#19ff1a"/>
+  </svg>
+</div>
 
-  <div class="hud">
-    <div>BAL: <span id="balance">100</span></div>
-    <div>BET: <span>5</span></div>
-  </div>
+<div class="tg-app">
+  <div class="slot" id="slot">
+    <div class="header">
+      <div class="title">🍀 IRISH NEON SLOT</div>
+      <div class="desc">
+        A vibrant 5-reel slot inspired by Irish luck, glowing clovers
+        and golden wins. Spin and feel the charm of Emerald Isle.
+      </div>
+    </div>
 
-  <button id="spin">SPIN</button>
-  <div class="result" id="result"></div>
+    <div class="reels">
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+      <div class="reel"><div class="strip"></div></div>
+    </div>
 
-  <div class="win-overlay" id="winOverlay">
-    <div class="win-text" id="winText">🍀 WIN!</div>
+    <div class="hud">
+      <div>BAL: <span id="balance">100</span></div>
+      <div>BET: <span>5</span></div>
+    </div>
+
+    <button id="spin">SPIN</button>
+    <div class="result" id="result"></div>
+
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-text">🍀 WIN!</div>
+    </div>
   </div>
 </div>
 
@@ -223,26 +281,22 @@ if(window.Telegram && Telegram.WebApp){
   Telegram.WebApp.ready();
 }
 
-/* CONFIG */
-const symbols = ['🍀','💰','⭐','🔔','🍺','7️⃣'];
-const WIN_CHANCE = 0.35;
+/* GAME */
+const symbols=['🍀','💰','⭐','🔔','🍺','7️⃣'];
+const reels=document.querySelectorAll('.strip');
+const spinBtn=document.getElementById('spin');
+const result=document.getElementById('result');
+const balanceEl=document.getElementById('balance');
+const overlay=document.getElementById('winOverlay');
+const slot=document.getElementById('slot');
 
-const reels = document.querySelectorAll('.strip');
-const spinBtn = document.getElementById('spin');
-const result = document.getElementById('result');
-const balanceEl = document.getElementById('balance');
-const overlay = document.getElementById('winOverlay');
-const winText = document.getElementById('winText');
-const slot = document.getElementById('slot');
+let balance=100;
+const bet=5;
+let loseStreak=0;
 
-let balance = 100;
-const bet = 5;
-let loseStreak = 0;
-
-/* INIT */
 reels.forEach(reel=>{
   reel.innerHTML='';
-  [...symbols, ...symbols].forEach(s=>{
+  [...symbols,...symbols].forEach(s=>{
     const d=document.createElement('div');
     d.className='symbol';
     d.textContent=s;
@@ -250,67 +304,45 @@ reels.forEach(reel=>{
   });
 });
 
-/* SPIN */
-spinBtn.onclick = () => {
-  if(balance < bet) return;
+spinBtn.onclick=()=>{
+  if(balance<bet) return;
+  balance-=bet;
+  balanceEl.textContent=balance;
+  result.textContent='';
 
-  balance -= bet;
-  balanceEl.textContent = balance;
-  result.textContent = '';
-
-  const isWin =
-    Math.random() < WIN_CHANCE ||
-    loseStreak >= 4;
-
-  let finalSymbols = [];
+  const isWin=Math.random()<0.35||loseStreak>=4;
+  let final=[];
 
   if(isWin){
-    loseStreak = 0;
-
-    const r = Math.random();
-    let multiplier = 2;
-    if(r > 0.92) multiplier = 10;
-    else if(r > 0.65) multiplier = 4;
-
-    const winSymbol = symbols[Math.floor(Math.random()*symbols.length)];
-    finalSymbols = Array(5).fill(winSymbol);
-
-    const winAmount = bet * multiplier;
-    balance += winAmount;
-    balanceEl.textContent = balance;
-
-    result.textContent = `WIN x${multiplier}`;
-    winText.textContent = multiplier >= 10 ? '💥 BIG WIN!' : '🍀 WIN!';
+    loseStreak=0;
+    const sym=symbols[Math.floor(Math.random()*symbols.length)];
+    final=Array(5).fill(sym);
+    balance+=bet*4;
+    balanceEl.textContent=balance;
     showWin();
-
-  } else {
+    result.textContent='WIN!';
+  }else{
     loseStreak++;
-    finalSymbols = Array.from({length:5},
-      ()=>symbols[Math.floor(Math.random()*symbols.length)]);
-    result.textContent = 'Try again';
+    final=Array.from({length:5},()=>symbols[Math.floor(Math.random()*symbols.length)]);
+    result.textContent='Try again';
   }
 
   reels.forEach((reel,i)=>{
-    const idx = symbols.indexOf(finalSymbols[i]);
-    reel.style.transitionDuration = (1.6 + i*0.15) + 's';
-    reel.style.transform = `translateY(-${idx * 84}px)`;
+    const idx=symbols.indexOf(final[i]);
+    reel.style.transform=`translateY(-${idx*84}px)`;
   });
 };
 
-/* WIN EFFECT */
 function showWin(){
   overlay.classList.add('show');
-
-  for(let i=0;i<14;i++){
-    const coin=document.createElement('div');
-    coin.className='coin';
-    coin.textContent='💰';
-    coin.style.left=Math.random()*80+10+'%';
-    coin.style.animationDelay=(Math.random()*0.3)+'s';
-    slot.appendChild(coin);
-    setTimeout(()=>coin.remove(),1300);
+  for(let i=0;i<12;i++){
+    const c=document.createElement('div');
+    c.className='coin';
+    c.textContent='💰';
+    c.style.left=Math.random()*80+10+'%';
+    slot.appendChild(c);
+    setTimeout(()=>c.remove(),1300);
   }
-
   setTimeout(()=>overlay.classList.remove('show'),1300);
 }
 </script>
