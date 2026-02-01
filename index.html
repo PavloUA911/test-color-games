@@ -2,291 +2,253 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Irish Neon Slot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irish Slot Telegram</title>
 
 <!-- Telegram WebApp SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-:root{
-  --bg:#020503;
-  --panel:#08110c;
-  --green:#19ff1a;
-  --gold:#ffd873;
-  --text:#ffffff;
-}
-
 *{
   box-sizing:border-box;
-  font-family:Montserrat,system-ui,Arial,sans-serif;
+  font-family:Arial,system-ui,sans-serif;
 }
 
-/* ===== TELEGRAM SAFE BODY ===== */
-html, body{
+body{
   margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:radial-gradient(circle at top,#0f2516,#020503 70%);
-  color:var(--text);
-}
-
-/* ===== ROOT FOR TELEGRAM ===== */
-.tg-root{
-  width:100%;
-  height:100svh; /* critical for iOS */
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
+  background:#020503;
+  color:#fff;
   display:flex;
   justify-content:center;
   align-items:flex-start;
+  padding:16px;
+}
+
+/* SLOT */
+.slot{
+  position:relative;
+  width:100%;
+  max-width:360px;
+  background:#08110c;
+  border-radius:20px;
+  padding:16px;
   overflow:hidden;
 }
 
-/* ===== SLOT FRAME ===== */
-.slot{
-  width:360px;
-  max-height:calc(100svh - 40px);
-  padding:22px;
-  margin-top:16px;
-  border-radius:28px;
-  background:linear-gradient(180deg,#0e1e15,#050907);
-  box-shadow:
-    0 0 80px rgba(25,255,26,.25),
-    inset 0 0 0 1px rgba(255,255,255,.08);
-}
-
-/* ===== HEADER ===== */
-.header{
-  text-align:center;
-  margin-bottom:12px;
-}
-
+/* HEADER */
 .title{
-  font-size:24px;
+  text-align:center;
+  font-size:20px;
   font-weight:900;
-  color:var(--green);
-  text-shadow:0 0 18px rgba(25,255,26,.9);
+  color:#19ff1a;
+  margin-bottom:6px;
 }
 
-.subtitle{
-  font-size:12px;
-  opacity:.65;
-}
-
-/* ===== REELS ===== */
-.reels-wrap{
-  background:#000;
-  border-radius:20px;
-  padding:12px;
-  margin:14px 0;
-  position:relative;
-  box-shadow:
-    inset 0 0 24px rgba(0,0,0,.9),
-    0 0 26px rgba(25,255,26,.25);
-}
-
+/* REELS */
 .reels{
   display:flex;
-  gap:8px;
   justify-content:center;
+  gap:6px;
+  margin:14px 0;
 }
 
 .reel{
   width:56px;
-  height:88px;
+  height:80px;
   background:#000;
-  border-radius:12px;
+  border-radius:10px;
   overflow:hidden;
-  box-shadow:
-    inset 0 0 14px rgba(0,0,0,.9),
-    0 0 12px rgba(25,255,26,.25);
-  position:relative;
 }
 
 .strip{
-  position:absolute;
-  top:0;
-  width:100%;
-  transition:transform 2s cubic-bezier(.08,.88,.18,1);
+  transition:transform 1.6s ease-out;
 }
 
 .symbol{
-  height:88px;
+  height:80px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:36px;
-  filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
+  font-size:32px;
 }
 
-/* PAYLINE */
-.payline{
-  position:absolute;
-  left:18px;
-  right:18px;
-  top:50%;
-  height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  box-shadow:0 0 14px rgba(255,216,115,1);
-  opacity:0;
-  transition:.4s;
-}
-
-.payline.active{opacity:1}
-
-/* ===== HUD ===== */
+/* HUD */
 .hud{
   display:flex;
   justify-content:space-between;
   font-weight:700;
-  margin:6px 4px 10px;
-  font-size:14px;
+  margin-bottom:10px;
 }
 
-.hud span{color:var(--gold)}
-
-/* ===== CONTROLS ===== */
-.controls{
-  display:flex;
-  justify-content:center;
-  margin-top:6px;
-}
-
+/* BUTTON */
 button{
-  background:linear-gradient(180deg,#2cff3f,#0fb81b);
-  border:none;
+  width:100%;
+  padding:12px;
   border-radius:999px;
-  padding:12px 48px;
+  border:none;
+  background:#19ff1a;
   font-size:16px;
   font-weight:900;
   cursor:pointer;
   color:#001a05;
-  box-shadow:
-    0 7px 0 #0a7a10,
-    0 0 24px rgba(25,255,26,.6);
 }
 
-button:active{
-  transform:translateY(4px);
-  box-shadow:
-    0 3px 0 #0a7a10,
-    0 0 18px rgba(25,255,26,.4);
-}
-
+/* RESULT */
 .result{
-  margin-top:10px;
   text-align:center;
+  margin-top:8px;
+  min-height:20px;
+  font-weight:700;
+}
+
+/* WIN OVERLAY */
+.win-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(25,255,26,.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.win-overlay.show{opacity:1}
+
+.win-text{
+  font-size:32px;
   font-weight:900;
-  min-height:22px;
+  color:#19ff1a;
+  text-shadow:0 0 18px rgba(25,255,26,.9);
+  animation:pulse .7s infinite alternate;
 }
 
-.win{
-  color:var(--gold);
-  text-shadow:0 0 24px rgba(255,216,115,1);
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.1)}
 }
 
-.lose{opacity:.6}
+/* COINS */
+.coin{
+  position:absolute;
+  bottom:20px;
+  font-size:20px;
+  animation:coinFly 1.2s ease-out forwards;
+  pointer-events:none;
+}
+
+@keyframes coinFly{
+  from{
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-140px) scale(1.4);
+    opacity:0;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="tg-root">
-  <div class="slot">
-    <div class="header">
-      <div class="title">IRISH NEON SLOT</div>
-      <div class="subtitle">Telegram WebApp</div>
-    </div>
+<div class="slot" id="slot">
+  <div class="title">🍀 IRISH SLOT</div>
 
-    <div class="reels-wrap">
-      <div class="payline" id="payline"></div>
-      <div class="reels">
-        <div class="reel"><div class="strip"></div></div>
-        <div class="reel"><div class="strip"></div></div>
-        <div class="reel"><div class="strip"></div></div>
-        <div class="reel"><div class="strip"></div></div>
-        <div class="reel"><div class="strip"></div></div>
-      </div>
-    </div>
+  <div class="reels">
+    <div class="reel"><div class="strip"></div></div>
+    <div class="reel"><div class="strip"></div></div>
+    <div class="reel"><div class="strip"></div></div>
+  </div>
 
-    <div class="hud">
-      <div>BALANCE: <span id="balance">1000</span></div>
-      <div>BET: <span>10</span></div>
-    </div>
+  <div class="hud">
+    <div>BAL: <span id="balance">100</span></div>
+    <div>BET: 5</div>
+  </div>
 
-    <div class="controls">
-      <button id="spin">SPIN</button>
-    </div>
+  <button id="spin">SPIN</button>
+  <div class="result" id="result"></div>
 
-    <div class="result" id="result"></div>
+  <!-- WIN EFFECT -->
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-text">🍀 WIN!</div>
   </div>
 </div>
 
 <script>
-/* ===== TELEGRAM INIT ===== */
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
-
-/* ===== SLOT LOGIC ===== */
-const symbols = ['🍀','💰','⭐','🔔','🍺','7️⃣'];
-const reels = document.querySelectorAll('.strip');
-const result = document.getElementById('result');
-const spinBtn = document.getElementById('spin');
-const payline = document.getElementById('payline');
-const balanceEl = document.getElementById('balance');
-
-let balance = 1000;
-const bet = 10;
-
-function init(reel){
-  reel.innerHTML = '';
-  [...symbols, ...symbols, ...symbols].forEach(s => {
-    const d = document.createElement('div');
-    d.className = 'symbol';
-    d.textContent = s;
-    reel.appendChild(d);
-  });
+/* TELEGRAM INIT */
+if(window.Telegram && Telegram.WebApp){
+  Telegram.WebApp.ready();
 }
 
-reels.forEach(init);
+/* GAME LOGIC */
+const symbols=['🍀','💰','⭐','🔔','7️⃣'];
+const reels=document.querySelectorAll('.strip');
+const spinBtn=document.getElementById('spin');
+const result=document.getElementById('result');
+const balanceEl=document.getElementById('balance');
+const overlay=document.getElementById('winOverlay');
+const slot=document.getElementById('slot');
 
-spinBtn.onclick = () => {
-  if(balance < bet) return;
+let balance=100;
+const bet=5;
 
-  balance -= bet;
-  balanceEl.textContent = balance;
+/* INIT REELS */
+reels.forEach(reel=>{
+  reel.innerHTML='';
+  [...symbols,...symbols].forEach(s=>{
+    const d=document.createElement('div');
+    d.className='symbol';
+    d.textContent=s;
+    reel.appendChild(d);
+  });
+});
 
-  result.textContent = '';
-  result.className = 'result';
-  payline.classList.remove('active');
+spinBtn.onclick=()=>{
+  if(balance<bet) return;
+  balance-=bet;
+  balanceEl.textContent=balance;
+  result.textContent='';
 
-  const res = [];
+  const res=[];
 
-  reels.forEach((reel, i) => {
-    const idx = Math.floor(Math.random() * symbols.length);
+  reels.forEach((reel,i)=>{
+    const idx=Math.floor(Math.random()*symbols.length);
     res.push(symbols[idx]);
-    reel.style.transitionDuration = (1.8 + i * 0.25) + 's';
-    reel.style.transform = `translateY(-${(idx + symbols.length) * 88}px)`;
+    reel.style.transform=`translateY(-${idx*80}px)`;
   });
 
-  setTimeout(() => {
-    if(res.every(v => v === res[0])){
-      const win = bet * 10;
-      balance += win;
-      balanceEl.textContent = balance;
-      payline.classList.add('active');
-      result.textContent = `🍀 WIN ${win}`;
-      result.classList.add('win');
-    } else {
-      result.textContent = 'Try again';
-      result.classList.add('lose');
+  setTimeout(()=>{
+    if(res.every(v=>v===res[0])){
+      balance+=20;
+      balanceEl.textContent=balance;
+      result.textContent='WIN!';
+      showWin();
+    }else{
+      result.textContent='Try again';
     }
-  }, 2400);
+  },600);
 };
+
+/* WIN EFFECT */
+function showWin(){
+  overlay.classList.add('show');
+
+  for(let i=0;i<10;i++){
+    const coin=document.createElement('div');
+    coin.className='coin';
+    coin.textContent='💰';
+    coin.style.left=Math.random()*80+10+'%';
+    coin.style.animationDelay=(Math.random()*0.3)+'s';
+    slot.appendChild(coin);
+    setTimeout(()=>coin.remove(),1200);
+  }
+
+  setTimeout(()=>{
+    overlay.classList.remove('show');
+  },1200);
+}
 </script>
 
 </body>
