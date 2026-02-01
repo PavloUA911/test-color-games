@@ -15,6 +15,7 @@
   --green-soft:#0fb81b;
   --gold:#ffd873;
   --separator:rgba(255,216,115,.35);
+  --text:#ffffff;
 }
 
 *{
@@ -28,7 +29,7 @@ html,body{
   width:100%;
   height:100%;
   background:radial-gradient(circle at top,#0f2b1a,#020503 70%);
-  color:#fff;
+  color:var(--text);
 }
 
 /* ===== APP ROOT ===== */
@@ -44,7 +45,7 @@ html,body{
 .slot{
   position:relative;
   width:100%;
-  max-width:420px;
+  max-width:440px;
   background:linear-gradient(180deg,#0b1f14,#050907);
   border-radius:22px;
   padding:16px;
@@ -54,22 +55,18 @@ html,body{
 }
 
 /* HEADER */
-.header{
-  text-align:center;
-}
-
+.header{text-align:center}
 .title{
   font-size:22px;
   font-weight:900;
   color:var(--green);
   text-shadow:0 0 14px rgba(25,255,26,.9);
 }
-
 .desc{
   font-size:12px;
   opacity:.8;
   margin-top:4px;
-  line-height:1.4;
+  line-height:1.45;
 }
 
 /* ===== REELS ===== */
@@ -85,13 +82,12 @@ html,body{
 
 .reel{
   position:relative;
-  width:58px;
-  height:86px;
+  width:60px;
+  height:88px;
   background:#000;
   overflow:hidden;
 }
 
-/* VISUAL SEPARATORS */
 .reel:not(:last-child)::after{
   content:"";
   position:absolute;
@@ -99,12 +95,7 @@ html,body{
   right:0;
   width:2px;
   height:calc(100% - 12px);
-  background:linear-gradient(
-    180deg,
-    transparent,
-    var(--separator),
-    transparent
-  );
+  background:linear-gradient(180deg,transparent,var(--separator),transparent);
   box-shadow:0 0 8px rgba(255,216,115,.6);
 }
 
@@ -118,7 +109,7 @@ html,body{
 }
 
 .symbol{
-  height:86px;
+  height:88px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -132,7 +123,6 @@ html,body{
   font-weight:700;
   font-size:14px;
 }
-
 .hud span{color:var(--gold)}
 
 button{
@@ -146,7 +136,9 @@ button{
   font-weight:900;
   cursor:pointer;
   color:#001a05;
+  box-shadow:0 6px 0 #0a7a10;
 }
+button.win{box-shadow:0 0 18px rgba(25,255,26,.9)}
 
 /* RESULT */
 .result{
@@ -156,33 +148,7 @@ button{
   font-weight:800;
 }
 
-/* ===== WINNERS LIST ===== */
-.winners{
-  margin-top:16px;
-  background:rgba(0,0,0,.35);
-  border-radius:16px;
-  padding:12px;
-}
-
-.winners h3{
-  margin:0 0 8px;
-  font-size:14px;
-  color:var(--gold);
-}
-
-.winner{
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  padding:4px 0;
-  opacity:.9;
-}
-
-.winner span:last-child{
-  color:var(--green);
-}
-
-/* ===== WIN EFFECT ===== */
+/* ===== WIN OVERLAY ===== */
 .win-overlay{
   position:absolute;
   inset:0;
@@ -194,13 +160,75 @@ button{
   pointer-events:none;
   transition:.3s;
 }
-
 .win-overlay.show{opacity:1}
-
 .win-text{
   font-size:32px;
   font-weight:900;
   color:var(--gold);
+}
+
+/* ===== EXTRA CONTENT ===== */
+.section{
+  margin-top:16px;
+  background:rgba(0,0,0,.35);
+  border-radius:16px;
+  padding:14px;
+}
+.section h3{
+  margin:0 0 6px;
+  font-size:14px;
+  color:var(--gold);
+}
+.section p{
+  font-size:12px;
+  line-height:1.45;
+  opacity:.85;
+}
+
+/* INFO */
+.info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:10px;
+}
+.info div{
+  background:rgba(0,0,0,.45);
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+  font-size:12px;
+}
+.info strong{
+  display:block;
+  color:var(--gold);
+}
+
+/* RATING */
+.rating{
+  text-align:center;
+  margin-top:8px;
+  font-size:18px;
+  color:var(--gold);
+}
+
+/* WINNERS */
+.winners{
+  margin-top:12px;
+}
+.winner{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  padding:3px 0;
+  opacity:.9;
+}
+.winner span:last-child{color:var(--green)}
+
+/* DESKTOP */
+@media(min-width:768px){
+  .reel{width:72px;height:104px}
+  .symbol{height:104px;font-size:36px}
 }
 </style>
 </head>
@@ -213,7 +241,8 @@ button{
     <div class="header">
       <div class="title">🍀 IRISH NEON SLOT</div>
       <div class="desc">
-        A premium 5-reel slot inspired by Irish luck and golden treasures.
+        A premium 5-reel slot inspired by Irish luck, glowing clovers and
+        golden treasures of the Emerald Isle.
       </div>
     </div>
 
@@ -233,24 +262,40 @@ button{
     <button id="spin">SPIN</button>
     <div class="result" id="result"></div>
 
-    <!-- WINNERS -->
-    <div class="winners">
-      <h3>🍀 Recent Wins</h3>
-      <div class="winner"><span>Patrick</span><span>+120</span></div>
-      <div class="winner"><span>Sean</span><span>+75</span></div>
-      <div class="winner"><span>Aoife</span><span>+300</span></div>
-      <div class="winner"><span>Liam</span><span>+50</span></div>
+    <div class="win-overlay" id="winOverlay">
+      <div class="win-text" id="winText">🍀 WIN!</div>
     </div>
 
-    <div class="win-overlay" id="winOverlay">
-      <div class="win-text">🍀 WIN!</div>
+    <!-- INFO -->
+    <div class="section">
+      <h3>About the Slot</h3>
+      <p>
+        Irish Neon Slot blends modern slot mechanics with classic Irish themes.
+        Enjoy smooth spins, frequent small wins and a vibrant neon atmosphere.
+      </p>
+
+      <div class="info">
+        <div><strong>RTP</strong>96.2%</div>
+        <div><strong>Volatility</strong>Medium</div>
+        <div><strong>Max Win</strong>x1000</div>
+      </div>
+
+      <div class="rating">★ ★ ★ ★ ☆</div>
+
+      <div class="winners">
+        <h3>🍀 Recent Wins</h3>
+        <div class="winner"><span>Patrick</span><span>+120</span></div>
+        <div class="winner"><span>Sean</span><span>+75</span></div>
+        <div class="winner"><span>Aoife</span><span>+300</span></div>
+        <div class="winner"><span>Liam</span><span>+50</span></div>
+      </div>
     </div>
 
   </div>
 </div>
 
 <script>
-/* TELEGRAM FIX */
+/* TELEGRAM */
 if(window.Telegram && Telegram.WebApp){
   Telegram.WebApp.ready();
   Telegram.WebApp.expand();
@@ -265,6 +310,7 @@ const spinBtn=document.getElementById('spin');
 const balanceEl=document.getElementById('balance');
 const resultEl=document.getElementById('result');
 const overlay=document.getElementById('winOverlay');
+const winText=document.getElementById('winText');
 
 let balance=100;
 const bet=5;
@@ -295,14 +341,25 @@ spinBtn.onclick=()=>{
     loseStreak=0;
     const sym=symbols[Math.floor(Math.random()*symbols.length)];
     final=Array(5).fill(sym);
-    balance+=bet*4;
+
+    const mult=Math.random()>0.9?10:4;
+    const win=bet*mult;
+    balance+=win;
     balanceEl.textContent=balance;
+
+    winText.textContent=mult>=10?'💥 BIG WIN!':'🍀 WIN!';
     overlay.classList.add('show');
-    setTimeout(()=>overlay.classList.remove('show'),900);
-    resultEl.textContent='WIN!';
+    spinBtn.classList.add('win');
+    setTimeout(()=>{
+      overlay.classList.remove('show');
+      spinBtn.classList.remove('win');
+    },900);
+
+    resultEl.textContent=`WIN x${mult}`;
   }else{
     loseStreak++;
-    final=Array.from({length:5},()=>symbols[Math.floor(Math.random()*symbols.length)]);
+    final=Array.from({length:5},
+      ()=>symbols[Math.floor(Math.random()*symbols.length)]);
     resultEl.textContent='Try again';
   }
 
