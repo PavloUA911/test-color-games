@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Irish Neon Slot</title>
+
+<!-- Telegram WebApp SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 :root{
@@ -11,11 +14,13 @@
   --panel:#08110c;
   --green:#19ff1a;
   --gold:#ffd873;
-  --glass:rgba(255,255,255,.06);
   --text:#ffffff;
 }
 
-*{box-sizing:border-box;font-family:Montserrat,system-ui}
+*{
+  box-sizing:border-box;
+  font-family:Montserrat,system-ui,Arial,sans-serif;
+}
 
 body{
   margin:0;
@@ -28,44 +33,27 @@ body{
   color:var(--text);
 }
 
-/* ===== SLOT FRAME ===== */
+/* ===== SLOT ===== */
 .slot{
   width:420px;
   padding:26px;
   border-radius:32px;
-  background:
-    linear-gradient(180deg,#0e1e15,#050907);
+  background:linear-gradient(180deg,#0e1e15,#050907);
   box-shadow:
     0 0 80px rgba(25,255,26,.25),
     inset 0 0 0 1px rgba(255,255,255,.08);
-  position:relative;
 }
 
-.slot::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:34px;
-  background:linear-gradient(135deg,
-    transparent 35%,
-    rgba(25,255,26,.45),
-    transparent 70%);
-  opacity:.3;
-  pointer-events:none;
-}
-
-/* ===== HEADER ===== */
 .header{
   text-align:center;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 
 .title{
-  font-size:28px;
+  font-size:26px;
   font-weight:900;
-  letter-spacing:1px;
   color:var(--green);
-  text-shadow:0 0 20px rgba(25,255,26,.8);
+  text-shadow:0 0 18px rgba(25,255,26,.9);
 }
 
 .subtitle{
@@ -73,16 +61,30 @@ body{
   opacity:.65;
 }
 
-/* ===== REELS ===== */
 .reels-wrap{
-  position:relative;
-  padding:14px;
+  background:#000;
   border-radius:22px;
-  background:rgba(0,0,0,.55);
+  padding:14px;
+  margin:16px 0;
   box-shadow:
-    inset 0 0 25px rgba(0,0,0,.9),
-    0 0 30px rgba(25,255,26,.25);
+    inset 0 0 24px rgba(0,0,0,.9),
+    0 0 26px rgba(25,255,26,.25);
+  position:relative;
 }
+
+.payline{
+  position:absolute;
+  left:20px;
+  right:20px;
+  top:50%;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  box-shadow:0 0 14px rgba(255,216,115,1);
+  opacity:0;
+  transition:.4s;
+}
+
+.payline.active{opacity:1}
 
 .reels{
   display:flex;
@@ -93,28 +95,17 @@ body{
 .reel{
   width:64px;
   height:96px;
-  border-radius:14px;
   background:#000;
+  border-radius:14px;
   overflow:hidden;
-  position:relative;
   box-shadow:
     inset 0 0 14px rgba(0,0,0,.9),
     0 0 12px rgba(25,255,26,.25);
 }
 
-.reel::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:14px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
-  pointer-events:none;
-}
-
 .strip{
   position:absolute;
   width:100%;
-  top:0;
   transition:transform 2s cubic-bezier(.08,.88,.18,1);
 }
 
@@ -127,38 +118,15 @@ body{
   filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
 }
 
-/* PAYLINE */
-.payline{
-  position:absolute;
-  left:20px;
-  right:20px;
-  top:50%;
-  height:2px;
-  background:linear-gradient(90deg,
-    transparent,
-    var(--gold),
-    transparent);
-  box-shadow:0 0 12px rgba(255,216,115,.9);
-  opacity:0;
-  transition:.4s;
-}
-
-.payline.active{opacity:1}
-
-/* ===== HUD ===== */
 .hud{
   display:flex;
   justify-content:space-between;
-  margin:18px 6px 12px;
-  font-size:14px;
   font-weight:700;
+  margin:10px 6px;
 }
 
-.hud span{
-  color:var(--gold);
-}
+.hud span{color:var(--gold)}
 
-/* ===== CONTROLS ===== */
 .controls{
   display:flex;
   justify-content:center;
@@ -177,7 +145,6 @@ button{
   box-shadow:
     0 8px 0 #0a7a10,
     0 0 30px rgba(25,255,26,.6);
-  transition:.15s;
 }
 
 button:active{
@@ -189,27 +156,17 @@ button:active{
 
 .result{
   margin-top:14px;
-  min-height:24px;
   text-align:center;
   font-weight:900;
 }
 
 .win{
   color:var(--gold);
-  text-shadow:
-    0 0 12px rgba(255,216,115,1),
-    0 0 32px rgba(255,216,115,.6);
-  animation:pulse .8s infinite alternate;
-}
-
-@keyframes pulse{
-  from{opacity:.7}
-  to{opacity:1}
+  text-shadow:0 0 24px rgba(255,216,115,1);
 }
 
 .lose{opacity:.6}
 </style>
-   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
@@ -217,7 +174,7 @@ button:active{
 <div class="slot">
   <div class="header">
     <div class="title">IRISH NEON SLOT</div>
-    <div class="subtitle">Premium Casino Visual</div>
+    <div class="subtitle">Telegram WebApp</div>
   </div>
 
   <div class="reels-wrap">
@@ -244,20 +201,25 @@ button:active{
 </div>
 
 <script>
-const symbols = ['🍀','💰','⭐','🔔','🍺','7️⃣'];
-const reels = document.querySelectorAll('.strip');
-const result = document.getElementById('result');
-const spinBtn = document.getElementById('spin');
-const payline = document.getElementById('payline');
-const balanceEl = document.getElementById('balance');
+/* ===== Telegram Init ===== */
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
 
-let balance = 1000;
-const bet = 10;
+/* ===== Slot Logic ===== */
+const symbols=['🍀','💰','⭐','🔔','🍺','7️⃣'];
+const reels=document.querySelectorAll('.strip');
+const result=document.getElementById('result');
+const spinBtn=document.getElementById('spin');
+const payline=document.getElementById('payline');
+const balanceEl=document.getElementById('balance');
+
+let balance=1000;
+const bet=10;
 
 function init(reel){
   reel.innerHTML='';
-  const stack=[...symbols,...symbols,...symbols];
-  stack.forEach(s=>{
+  [...symbols,...symbols,...symbols].forEach(s=>{
     const d=document.createElement('div');
     d.className='symbol';
     d.textContent=s;
@@ -273,11 +235,9 @@ spinBtn.onclick=()=>{
   balanceEl.textContent=balance;
 
   result.textContent='';
-  result.className='result';
   payline.classList.remove('active');
 
   const res=[];
-
   reels.forEach((reel,i)=>{
     const idx=Math.floor(Math.random()*symbols.length);
     res.push(symbols[idx]);
@@ -292,35 +252,14 @@ spinBtn.onclick=()=>{
       balanceEl.textContent=balance;
       payline.classList.add('active');
       result.textContent=`🍀 WIN ${win}`;
-      result.classList.add('win');
+      result.className='result win';
     }else{
       result.textContent='Try again';
-      result.classList.add('lose');
+      result.className='result lose';
     }
   },2600);
 };
 </script>
-  <script>
-    // Telegram init
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
 
-    // Game logic
-    const counts = {
-        red: 0,
-        green: 0,
-        blue: 0
-    };
-
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const color = btn.dataset.color;
-            counts[color]++;
-            document.getElementById(color + 'Count').textContent = counts[color];
-        });
-    });
-</script>
 </body>
 </html>
-
